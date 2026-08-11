@@ -1,4 +1,5 @@
 export type CardData = {
+  id: string
   company: string
   role: string
   date: string
