@@ -4,6 +4,7 @@ import type { CardData, Rect } from '../types'
 type CardOverlayProps = {
   card: CardData
   origin: Rect
+  isRejected: boolean
   onClose: () => void
   onUpdateCard: (cardId: string, updates: Partial<CardData>) => void
 }
@@ -21,26 +22,32 @@ function getExpandedRect(): Rect {
   }
 }
 
-export function CardOverlay({ card, origin, onClose, onUpdateCard }: CardOverlayProps) {
+export function CardOverlay({ card, origin, isRejected, onClose, onUpdateCard }: CardOverlayProps) {
   const [expandedRect] = useState(getExpandedRect)
   const [isExpanded, setIsExpanded] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
   const [notesValue, setNotesValue] = useState(card.notes ?? '')
+  const [reasonValue, setReasonValue] = useState(card.rejectionReason ?? '')
+  const [learningValue, setLearningValue] = useState(card.learningFocus ?? '')
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => setIsExpanded(true))
     return () => cancelAnimationFrame(raf)
   }, [])
 
-  const commitNotes = useCallback(() => {
-    if (notesValue !== (card.notes ?? '')) onUpdateCard(card.id, { notes: notesValue || undefined })
-  }, [notesValue, card.notes, card.id, onUpdateCard])
+  const commitFields = useCallback(() => {
+    const updates: Partial<CardData> = {}
+    if (notesValue !== (card.notes ?? '')) updates.notes = notesValue || undefined
+    if (reasonValue !== (card.rejectionReason ?? '')) updates.rejectionReason = reasonValue || undefined
+    if (learningValue !== (card.learningFocus ?? '')) updates.learningFocus = learningValue || undefined
+    if (Object.keys(updates).length > 0) onUpdateCard(card.id, updates)
+  }, [notesValue, reasonValue, learningValue, card, onUpdateCard])
 
   const handleClose = useCallback(() => {
-    commitNotes()
+    commitFields()
     setIsExpanded(false)
     setIsClosing(true)
-  }, [commitNotes])
+  }, [commitFields])
 
   useEffect(() => {
     if (!isClosing) return
@@ -108,7 +115,7 @@ export function CardOverlay({ card, origin, onClose, onUpdateCard }: CardOverlay
           </div>
 
           <div
-            className="transition-opacity ease-out overflow-y-auto flex-1 min-h-0"
+            className="transition-opacity ease-out overflow-y-auto flex-1 min-h-0 flex flex-col gap-4"
             style={{
               opacity: isExpanded ? 1 : 0,
               marginTop: isExpanded ? 20 : 0,
@@ -118,17 +125,51 @@ export function CardOverlay({ card, origin, onClose, onUpdateCard }: CardOverlay
               transitionDelay: isExpanded ? '80ms' : '0ms',
             }}
           >
-            <div className="text-[11px] font-semibold text-[#85827C] uppercase tracking-wide mb-2">Notes</div>
-            <textarea
-              value={notesValue}
-              onChange={(e) => setNotesValue(e.target.value)}
-              onBlur={commitNotes}
-              readOnly={!isExpanded}
-              tabIndex={isExpanded ? 0 : -1}
-              rows={3}
-              placeholder="Add notes..."
-              className="w-full bg-[#17161B] border border-[#2C2B31] rounded-lg px-2.5 py-2 text-[13px] text-[#D6D3CC] leading-relaxed resize-none outline-none focus:border-[#2DBF8F] placeholder:text-[#5C5A55]"
-            />
+            <div>
+              <div className="text-[11px] font-semibold text-[#85827C] uppercase tracking-wide mb-2">Notes</div>
+              <textarea
+                value={notesValue}
+                onChange={(e) => setNotesValue(e.target.value)}
+                onBlur={commitFields}
+                readOnly={!isExpanded}
+                tabIndex={isExpanded ? 0 : -1}
+                rows={3}
+                placeholder="Add notes..."
+                className="w-full bg-[#17161B] border border-[#2C2B31] rounded-lg px-2.5 py-2 text-[13px] text-[#D6D3CC] leading-relaxed resize-none outline-none focus:border-[#2DBF8F] placeholder:text-[#5C5A55]"
+              />
+            </div>
+
+            {isRejected && (
+              <>
+                <div>
+                  <div className="text-[11px] font-semibold text-[#85827C] uppercase tracking-wide mb-2">Reason</div>
+                  <textarea
+                    value={reasonValue}
+                    onChange={(e) => setReasonValue(e.target.value)}
+                    onBlur={commitFields}
+                    readOnly={!isExpanded}
+                    tabIndex={isExpanded ? 0 : -1}
+                    rows={2}
+                    placeholder="Why was this rejected?"
+                    className="w-full bg-[#17161B] border border-[#2C2B31] rounded-lg px-2.5 py-2 text-[13px] text-[#D6D3CC] leading-relaxed resize-none outline-none focus:border-[#2DBF8F] placeholder:text-[#5C5A55]"
+                  />
+                </div>
+
+                <div>
+                  <div className="text-[11px] font-semibold text-[#85827C] uppercase tracking-wide mb-2">Learning Focus</div>
+                  <textarea
+                    value={learningValue}
+                    onChange={(e) => setLearningValue(e.target.value)}
+                    onBlur={commitFields}
+                    readOnly={!isExpanded}
+                    tabIndex={isExpanded ? 0 : -1}
+                    rows={2}
+                    placeholder="What should you work on because of this?"
+                    className="w-full bg-[#17161B] border border-[#2C2B31] rounded-lg px-2.5 py-2 text-[13px] text-[#D6D3CC] leading-relaxed resize-none outline-none focus:border-[#2DBF8F] placeholder:text-[#5C5A55]"
+                  />
+                </div>
+              </>
+            )}
           </div>
 
           <button

@@ -3,10 +3,11 @@ import type { CardData, Rect } from '../types'
 import { CardOverlay } from './CardOverlay'
 
 type ApplicationCardProps = CardData & {
+  isRejected: boolean
   onUpdateCard: (cardId: string, updates: Partial<CardData>) => void
 }
 
-export function ApplicationCard({ onUpdateCard, ...card }: ApplicationCardProps) {
+export function ApplicationCard({ isRejected, onUpdateCard, ...card }: ApplicationCardProps) {
   const { company, role, date, hasInterview } = card
   const cardRef = useRef<HTMLDivElement>(null)
   const [origin, setOrigin] = useState<Rect | null>(null)
@@ -38,7 +39,13 @@ export function ApplicationCard({ onUpdateCard, ...card }: ApplicationCardProps)
         </div>
       </div>
       {origin && (
-        <CardOverlay card={card} origin={origin} onClose={() => setOrigin(null)} onUpdateCard={onUpdateCard} />
+        <CardOverlay
+          card={card}
+          origin={origin}
+          isRejected={isRejected}
+          onClose={() => setOrigin(null)}
+          onUpdateCard={onUpdateCard}
+        />
       )}
     </>
   )

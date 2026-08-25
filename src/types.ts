@@ -5,6 +5,8 @@ export type CardData = {
   date: string
   hasInterview?: boolean
   notes?: string
+  rejectionReason?: string
+  learningFocus?: string
 }
 
 export type Rect = {

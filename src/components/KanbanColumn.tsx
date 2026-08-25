@@ -6,6 +6,8 @@ type KanbanColumnProps = StageDef & {
 }
 
 export function KanbanColumn({ name, dot, cards, onUpdateCard }: KanbanColumnProps) {
+  const isRejected = name === 'Rejected'
+
   return (
     <div className="flex-none w-[280px] min-w-0">
       <div className="bg-[#1A191E] border border-[#2C2B31] rounded-xl p-3.5 min-h-[80px]">
@@ -18,7 +20,7 @@ export function KanbanColumn({ name, dot, cards, onUpdateCard }: KanbanColumnPro
         </div>
         <div className="flex flex-col gap-2">
           {cards.map((card) => (
-            <ApplicationCard key={card.id} {...card} onUpdateCard={onUpdateCard} />
+            <ApplicationCard key={card.id} {...card} isRejected={isRejected} onUpdateCard={onUpdateCard} />
           ))}
         </div>
       </div>
