@@ -4,6 +4,7 @@ export type CardData = {
   role: string
   date: string
   hasInterview?: boolean
+  notes?: string
 }
 
 export type StageDef = {

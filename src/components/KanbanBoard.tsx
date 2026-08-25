@@ -1,13 +1,17 @@
-import { STAGES } from '../data/seed_stages'
+import type { StageDef } from '../types'
 import { KanbanColumn } from './KanbanColumn'
 import { useHorizontalScroll } from '../hooks/useHorizontalScroll'
 
-export function KanbanBoard() {
+type KanbanBoardProps = {
+  stages: StageDef[]
+}
+
+export function KanbanBoard({ stages }: KanbanBoardProps) {
   const scrollRef = useHorizontalScroll<HTMLDivElement>()
 
   return (
     <div ref={scrollRef} className="flex gap-4 items-start overflow-x-auto scrollbar-hide">
-      {STAGES.map((stage) => (
+      {stages.map((stage) => (
         <KanbanColumn key={stage.name} {...stage} />
       ))}
     </div>
