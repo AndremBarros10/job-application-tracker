@@ -5,7 +5,7 @@ export const STAGES: StageDef[] = [
     name: 'Wishlist',
     dot: '#ABA79E',
     cards: [
-      { id: 'wishlist-1', company: 'Nimbus Labs', role: 'Senior Frontend Engineer', date: 'Aug 5' },
+      { id: 'wishlist-1', company: 'Nimbus Labs', role: 'Senior Frontend Engineer', date: 'Aug 5', notes: 'Referral from Sam. Team uses React + GraphQL, fully remote.' },
       { id: 'wishlist-2', company: 'Pinecrest Studios', role: 'Game Engine Programmer', date: 'Aug 6' },
       { id: 'wishlist-3', company: 'Driftwood Media', role: 'Frontend Engineer', date: 'Aug 4' },
     ],
@@ -24,7 +24,7 @@ export const STAGES: StageDef[] = [
     name: 'Phone Screen',
     dot: '#E3A83A',
     cards: [
-      { id: 'phone-screen-1', company: 'Ridgeline Robotics', role: 'Platform Engineer', date: 'Jul 10', hasInterview: true },
+      { id: 'phone-screen-1', company: 'Ridgeline Robotics', role: 'Platform Engineer', date: 'Jul 10', hasInterview: true, notes: 'Recruiter call went well. Next step is a 45min technical screen with the platform lead.' },
       { id: 'phone-screen-2', company: 'Silverline Health', role: 'Frontend Engineer', date: 'Jul 8', hasInterview: true },
       { id: 'phone-screen-3', company: 'Lumen Networks', role: 'Site Reliability Engineer', date: 'Jul 5', hasInterview: true },
     ],

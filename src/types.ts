@@ -7,6 +7,13 @@ export type CardData = {
   notes?: string
 }
 
+export type Rect = {
+  top: number
+  left: number
+  width: number
+  height: number
+}
+
 export type StageDef = {
   name: string
   dot: string
