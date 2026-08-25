@@ -2,7 +2,11 @@ import { useRef, useState } from 'react'
 import type { CardData, Rect } from '../types'
 import { CardOverlay } from './CardOverlay'
 
-export function ApplicationCard(card: CardData) {
+type ApplicationCardProps = CardData & {
+  onUpdateCard: (cardId: string, updates: Partial<CardData>) => void
+}
+
+export function ApplicationCard({ onUpdateCard, ...card }: ApplicationCardProps) {
   const { company, role, date, hasInterview } = card
   const cardRef = useRef<HTMLDivElement>(null)
   const [origin, setOrigin] = useState<Rect | null>(null)
@@ -33,7 +37,9 @@ export function ApplicationCard(card: CardData) {
           {hasInterview && <span className="text-[9px] text-[#B48EEA] font-semibold">● interview</span>}
         </div>
       </div>
-      {origin && <CardOverlay card={card} origin={origin} onClose={() => setOrigin(null)} />}
+      {origin && (
+        <CardOverlay card={card} origin={origin} onClose={() => setOrigin(null)} onUpdateCard={onUpdateCard} />
+      )}
     </>
   )
 }

@@ -1,7 +1,11 @@
-import type { StageDef } from '../types'
+import type { CardData, StageDef } from '../types'
 import { ApplicationCard } from './ApplicationCard'
 
-export function KanbanColumn({ name, dot, cards }: StageDef) {
+type KanbanColumnProps = StageDef & {
+  onUpdateCard: (cardId: string, updates: Partial<CardData>) => void
+}
+
+export function KanbanColumn({ name, dot, cards, onUpdateCard }: KanbanColumnProps) {
   return (
     <div className="flex-none w-[280px] min-w-0">
       <div className="bg-[#1A191E] border border-[#2C2B31] rounded-xl p-3.5 min-h-[80px]">
@@ -14,7 +18,7 @@ export function KanbanColumn({ name, dot, cards }: StageDef) {
         </div>
         <div className="flex flex-col gap-2">
           {cards.map((card) => (
-            <ApplicationCard key={card.company} {...card} />
+            <ApplicationCard key={card.id} {...card} onUpdateCard={onUpdateCard} />
           ))}
         </div>
       </div>

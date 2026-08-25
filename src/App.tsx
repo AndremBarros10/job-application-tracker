@@ -3,7 +3,7 @@ import { Header } from './components/Header'
 import { KanbanBoard } from './components/KanbanBoard'
 import { AddApplicationModal } from './components/AddApplicationModal'
 import { STAGES } from './data/seed_stages'
-import type { StageDef } from './types'
+import type { CardData, StageDef } from './types'
 
 export default function App() {
   const [stages, setStages] = useState<StageDef[]>(STAGES)
@@ -21,10 +21,19 @@ export default function App() {
     setIsModalOpen(false)
   }
 
+  function updateCard(cardId: string, updates: Partial<CardData>) {
+    setStages((prev) =>
+      prev.map((stage) => ({
+        ...stage,
+        cards: stage.cards.map((card) => (card.id === cardId ? { ...card, ...updates } : card)),
+      }))
+    )
+  }
+
   return (
     <div className="max-w-2x1 mx-auto p-8 flex flex-col gap-4">
       <Header onAddClick={() => setIsModalOpen(true)} />
-      <KanbanBoard stages={stages} />
+      <KanbanBoard stages={stages} onUpdateCard={updateCard} />
       {isModalOpen && (
         <AddApplicationModal
           stages={stages}

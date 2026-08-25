@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { CardData, Rect } from '../types'
 
 type CardOverlayProps = {
   card: CardData
   origin: Rect
   onClose: () => void
+  onUpdateCard: (cardId: string, updates: Partial<CardData>) => void
 }
 
 const TRANSITION_MS = 300
@@ -20,20 +21,26 @@ function getExpandedRect(): Rect {
   }
 }
 
-export function CardOverlay({ card, origin, onClose }: CardOverlayProps) {
+export function CardOverlay({ card, origin, onClose, onUpdateCard }: CardOverlayProps) {
   const [expandedRect] = useState(getExpandedRect)
   const [isExpanded, setIsExpanded] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
+  const [notesValue, setNotesValue] = useState(card.notes ?? '')
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => setIsExpanded(true))
     return () => cancelAnimationFrame(raf)
   }, [])
 
-  function handleClose() {
+  const commitNotes = useCallback(() => {
+    if (notesValue !== (card.notes ?? '')) onUpdateCard(card.id, { notes: notesValue || undefined })
+  }, [notesValue, card.notes, card.id, onUpdateCard])
+
+  const handleClose = useCallback(() => {
+    commitNotes()
     setIsExpanded(false)
     setIsClosing(true)
-  }
+  }, [commitNotes])
 
   useEffect(() => {
     if (!isClosing) return
@@ -47,7 +54,7 @@ export function CardOverlay({ card, origin, onClose }: CardOverlayProps) {
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [])
+  }, [handleClose])
 
   const rect = isExpanded ? expandedRect : origin
 
@@ -112,9 +119,16 @@ export function CardOverlay({ card, origin, onClose }: CardOverlayProps) {
             }}
           >
             <div className="text-[11px] font-semibold text-[#85827C] uppercase tracking-wide mb-2">Notes</div>
-            <p className="text-[13px] text-[#D6D3CC] leading-relaxed whitespace-pre-wrap">
-              {card.notes || 'No notes yet.'}
-            </p>
+            <textarea
+              value={notesValue}
+              onChange={(e) => setNotesValue(e.target.value)}
+              onBlur={commitNotes}
+              readOnly={!isExpanded}
+              tabIndex={isExpanded ? 0 : -1}
+              rows={3}
+              placeholder="Add notes..."
+              className="w-full bg-[#17161B] border border-[#2C2B31] rounded-lg px-2.5 py-2 text-[13px] text-[#D6D3CC] leading-relaxed resize-none outline-none focus:border-[#2DBF8F] placeholder:text-[#5C5A55]"
+            />
           </div>
 
           <button
