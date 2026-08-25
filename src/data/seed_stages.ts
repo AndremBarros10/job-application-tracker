@@ -2,15 +2,6 @@ import type { StageDef } from '../types'
 
 export const STAGES: StageDef[] = [
   {
-    name: 'Wishlist',
-    dot: '#ABA79E',
-    cards: [
-      { id: 'wishlist-1', company: 'Nimbus Labs', role: 'Senior Frontend Engineer', date: 'Aug 5', notes: 'Referral from Sam. Team uses React + GraphQL, fully remote.' },
-      { id: 'wishlist-2', company: 'Pinecrest Studios', role: 'Game Engine Programmer', date: 'Aug 6' },
-      { id: 'wishlist-3', company: 'Driftwood Media', role: 'Frontend Engineer', date: 'Aug 4' },
-    ],
-  },
-  {
     name: 'Applied',
     dot: '#7C9CF0',
     cards: [
