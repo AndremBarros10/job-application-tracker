@@ -2,6 +2,8 @@
 
 A web app for tracking job applications through a Kanban-style board — move applications through stages (**Applied**, **Phone Screen**, **Interview**, **Offer**, **Rejected**) as your search progresses.
 
+**Live demo:** https://andrembarros10.github.io/job-application-tracker/
+
 > **Status:** In development. The board, application cards, add/edit flows, and drag-and-drop are working.
 
 ## Tech Stack
