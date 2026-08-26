@@ -1,14 +1,15 @@
 # Job Application Tracker
 
-A web app for tracking job applications through a Kanban-style board — move applications through stages like **Applied**, **Interviewing**, **Offered**, and **Rejected** as your search progresses.
+A web app for tracking job applications through a Kanban-style board — move applications through stages (**Applied**, **Phone Screen**, **Interview**, **Offer**, **Rejected**) as your search progresses.
 
-> **Status:** Early development. Core scaffolding is in place; the Kanban board and application data model are actively being built.
+> **Status:** In development. The board, application cards, add/edit flows, and drag-and-drop are working.
 
 ## Tech Stack
 
 - [React 19](https://react.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Vite](https://vite.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
 - [ESLint](https://eslint.org/)
 
 ## Getting Started
@@ -46,17 +47,35 @@ npm run lint      # Run ESLint
 
 ```
 src/
-├── App.tsx       # Root application component
-├── main.tsx      # Application entry point
-└── Styles.css    # Global styles
+├── App.tsx                        # Root application component, board state + localStorage persistence
+├── main.tsx                       # Application entry point
+├── index.css                      # Global styles
+├── types.ts                       # CardData / StageDef / Rect types
+├── data/
+│   └── seed_stages.ts             # Initial stage definitions
+├── hooks/
+│   └── useHorizontalScroll.ts     # Horizontal scroll behavior for the board
+└── components/
+    ├── Header.tsx                 # App header
+    ├── KanbanBoard.tsx            # Board layout
+    ├── KanbanColumn.tsx           # Single stage column
+    ├── ApplicationCard.tsx        # Card summary view
+    ├── CardOverlay.tsx            # Expanded card detail/edit view
+    └── AddApplicationModal.tsx    # "Add Application" modal
 ```
+
+## Features
+
+- Kanban board with Applied / Phone Screen / Interview / Offer / Rejected columns
+- Add applications via modal
+- Expand a card to view and edit notes, rejection reason, and learning focus
+- Drag and drop cards between stages, and reorder cards within a stage
+- Board state persists to `localStorage`
 
 ## Roadmap
 
-- [ ] Kanban board with Applied / Interviewing / Offered / Rejected columns
-- [ ] Add, edit, and delete job applications
-- [ ] Persist application data
-- [ ] Drag-and-drop between stages
+- [ ] Delete applications
+- [ ] Edit core fields (company, role, date) after creation
 
 ## License
 

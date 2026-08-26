@@ -46,10 +46,34 @@ export default function App() {
     )
   }
 
+  function moveCard(cardId: string, toStage: string, toIndex: number) {
+    setStages((prev) => {
+      const fromStage = prev.find((stage) => stage.cards.some((card) => card.id === cardId))
+      const card = fromStage?.cards.find((c) => c.id === cardId)
+      if (!fromStage || !card) return prev
+
+      return prev.map((stage) => {
+        if (stage.name === fromStage.name && stage.name === toStage) {
+          const withoutCard = stage.cards.filter((c) => c.id !== cardId)
+          const clampedIndex = Math.min(toIndex, withoutCard.length)
+          return { ...stage, cards: [...withoutCard.slice(0, clampedIndex), card, ...withoutCard.slice(clampedIndex)] }
+        }
+        if (stage.name === fromStage.name) {
+          return { ...stage, cards: stage.cards.filter((c) => c.id !== cardId) }
+        }
+        if (stage.name === toStage) {
+          const clampedIndex = Math.min(toIndex, stage.cards.length)
+          return { ...stage, cards: [...stage.cards.slice(0, clampedIndex), card, ...stage.cards.slice(clampedIndex)] }
+        }
+        return stage
+      })
+    })
+  }
+
   return (
     <div className="max-w-2x1 mx-auto p-8 flex flex-col gap-4">
       <Header onAddClick={() => setIsModalOpen(true)} />
-      <KanbanBoard stages={stages} onUpdateCard={updateCard} />
+      <KanbanBoard stages={stages} onUpdateCard={updateCard} onMoveCard={moveCard} />
       {isModalOpen && (
         <AddApplicationModal
           stages={stages}

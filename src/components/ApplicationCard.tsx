@@ -8,9 +8,10 @@ type ApplicationCardProps = CardData & {
 }
 
 export function ApplicationCard({ isRejected, onUpdateCard, ...card }: ApplicationCardProps) {
-  const { company, role, date, hasInterview } = card
+  const { id, company, role, date, hasInterview } = card
   const cardRef = useRef<HTMLDivElement>(null)
   const [origin, setOrigin] = useState<Rect | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
 
   function handleClick() {
     const el = cardRef.current
@@ -19,13 +20,23 @@ export function ApplicationCard({ isRejected, onUpdateCard, ...card }: Applicati
     setOrigin({ top: bounds.top, left: bounds.left, width: bounds.width, height: bounds.height })
   }
 
+  function handleDragStart(e: React.DragEvent) {
+    e.dataTransfer.setData('text/plain', id)
+    e.dataTransfer.effectAllowed = 'move'
+    setIsDragging(true)
+  }
+
   return (
     <>
       <div
         ref={cardRef}
+        data-card-id={id}
+        draggable
+        onDragStart={handleDragStart}
+        onDragEnd={() => setIsDragging(false)}
         onClick={handleClick}
         className="bg-[#1E1D22] border border-[#2C2B31] rounded-[9px] py-2.5 px-[11px] cursor-pointer shadow-[0_1px_2px_rgba(0,0,0,0.4)]"
-        style={{ visibility: origin ? 'hidden' : 'visible' }}
+        style={{ visibility: origin ? 'hidden' : 'visible', opacity: isDragging ? 0.4 : 1 }}
       >
         <div className="text-[12.5px] font-semibold mb-0.5 overflow-hidden text-ellipsis whitespace-nowrap">
           {company}
